@@ -9,7 +9,10 @@ def match_pattern(input_line, pattern):
         return pattern in input_line
     elif '\d' in pattern:
         for i in range(0, 10):
-            return str(i) in input_line
+            if str(i) in str(input_line):
+                return True
+        else:
+            return False
     else:
         raise RuntimeError(f"Unhandled pattern: {pattern}")
 
