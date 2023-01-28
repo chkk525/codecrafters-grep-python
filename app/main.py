@@ -7,6 +7,9 @@ import sys
 def match_pattern(input_line, pattern):
     if len(pattern) == 1:
         return pattern in input_line
+    elif '\d' in pattern:
+        for i in range(0, 10):
+            return i in input_line
     else:
         raise RuntimeError(f"Unhandled pattern: {pattern}")
 
