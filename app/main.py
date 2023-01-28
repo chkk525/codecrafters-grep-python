@@ -82,6 +82,9 @@ def match_pattern_sequence(input_line: str, pattern: str) -> bool:
         else:
             pt, pattern = pattern[:1], pattern[1:]
 
+        if pattern[0] == '+':
+            pattern = '^'+pt+pattern
+
         input_start_pos = find_first_match_index(
             input_line, pt, start_flag, end_flag)
 
