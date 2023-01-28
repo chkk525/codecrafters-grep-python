@@ -11,8 +11,8 @@ def match_pattern(input_line, pattern):
         return any(char.isdigit() for char in input_line)
     elif pattern == '\w':
         return any(char.isalpha() or char.isdigit() for char in input_line)
-    elif re.search("\[^\w+?\]", pattern):
-        chars = re.search("\[(.+?)\]", pattern).group(1)
+    elif re.search("\[\^\w+?\]", pattern):
+        chars = re.search("\[\^(.+?)\]", pattern).group(1)
         return not (any((char in input_line) for char in chars))
     elif re.search("\[\w+?\]", pattern):
         chars = re.search("\[(.+?)\]", pattern).group(1)
