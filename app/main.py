@@ -5,7 +5,7 @@ import sys
 # import lark - available if you need it!
 
 
-def find_first_match_index(input_line: str, pattern: str, start_flag: bool = False) -> int:
+def find_first_match_index(input_line: str, pattern: str, start_flag: bool = False, end_flag: bool = False) -> int:
     """
     Finds the index of the first match of the given pattern in the input_line.
     If no match is found, returns -1.
@@ -17,33 +17,36 @@ def find_first_match_index(input_line: str, pattern: str, start_flag: bool = Fal
     Returns:
         int: The index of the first match, or -1 if no match is found.
     """
+    if pattern == '$' and input_line == '':
+        return 0
 
     if pattern in ('\\d', '\\w'):
-        for i, char in enumerate(input_line):
+        for idx, char in enumerate(input_line):
             if (pattern == '\\d' and char.isdigit()) or (pattern == '\\w' and (char.isalpha() or char.isdigit())):
-                if not (start_flag) or (start_flag and i == 0):
-                    return i+1
+                if not (start_flag) or (start_flag and idx == 0):
+                    return idx+1
     elif pattern[0] == '[' and pattern[-1] == ']':
         if pattern[1] == '^':
             negative_pattern = pattern[2:-1]
-            for i, c in enumerate(negative_pattern):
+            for idx, c in enumerate(negative_pattern):
                 if (c in input_line):
-                    if not (start_flag) or (start_flag and i == 0):
+                    if not (start_flag) or (start_flag and idx == 0):
                         return -1
             else:
                 return 0
         else:
             positive_pattern = pattern[1:-1]
-            for i, c in enumerate(positive_pattern):
+            for idx, c in enumerate(positive_pattern):
                 idx = input_line.find(c)
                 if idx != -1:
-                    if not (start_flag) or (start_flag and i == 0):
+                    if not (start_flag) or (start_flag and idx == 0):
                         return idx+1
     else:
         idx = input_line.find(pattern)
         if idx >= 0:
             if not (start_flag) or (start_flag and idx == 0):
                 return idx+1
+
     return -1
 
 
@@ -60,10 +63,14 @@ def match_pattern_sequence(input_line: str, pattern: str) -> bool:
     """
 
     start_flag = False
+    end_flag = False
     while pattern:
         if pattern[0] == '^':
             start_flag = True
             pattern = pattern[1:]
+
+        if pattern[-1] == '$':
+            end_flag = True
 
         if pattern[0] == '\\':
             pt, pattern = pattern[:2], pattern[2:]
@@ -75,7 +82,8 @@ def match_pattern_sequence(input_line: str, pattern: str) -> bool:
         else:
             pt, pattern = pattern[:1], pattern[1:]
 
-        input_start_pos = find_first_match_index(input_line, pt, start_flag)
+        input_start_pos = find_first_match_index(
+            input_line, pt, start_flag, end_flag)
 
         if input_start_pos < 0:
             return False
