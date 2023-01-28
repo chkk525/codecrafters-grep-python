@@ -17,6 +17,7 @@ def find_first_match_index(input_line: str, pattern: str, start_flag: bool = Fal
     Returns:
         int: The index of the first match, or -1 if no match is found.
     """
+    print(input_line, pattern, start_flag, end_flag)
     if pattern == '$' and input_line == '':
         return 0
 
@@ -83,7 +84,7 @@ def match_pattern_sequence(input_line: str, pattern: str) -> bool:
             pt, pattern = pattern[:1], pattern[1:]
 
         if pattern and pattern[0] == '+':
-            pattern = '^'
+            pattern = '^' + pattern
 
         input_start_pos = find_first_match_index(
             input_line, pt, start_flag, end_flag)
